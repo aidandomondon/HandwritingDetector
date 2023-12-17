@@ -1,7 +1,6 @@
 ###############################################################################
 # Initializes the database to store user data
 ###############################################################################
-import json
 import sqlite3 as sql
 from config import Config
 

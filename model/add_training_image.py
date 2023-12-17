@@ -1,7 +1,6 @@
 ###############################################################################
 # Adds the given image to the user store as a training image
 ###############################################################################
-import json
 import sqlite3 as sql
 from config import Config
 
