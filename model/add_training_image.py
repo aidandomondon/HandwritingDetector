@@ -3,12 +3,12 @@
 ###############################################################################
 import json
 import sqlite3 as sql
-import settings
+from config import Config
 
 
 # Inserts the training image into the TrainingImage table
 def _send_to_db(image_as_blob, label):
-    with sql.connect(settings.DB_PATH) as connection:
+    with sql.connect(Config.DB_PATH) as connection:
         cursor = connection.cursor()
         # Find labelID for our label.
         # possible inefficiency here. since we have to query the db for the labelID
