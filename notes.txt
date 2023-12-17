@@ -1,0 +1,37 @@
+- settings page
+    - change number of epochs
+    - change model architecture
+
+Accomplishments / features:
+- integrates with an SQLite database
+- dynamically fetches additions to the training database and trains model on new images
+    - avoids retraining on old images, only trains on new ones
+        - prevents redundancy
+        - prevents overfitting
+    - potential to avoid excess storage use if database made remote
+        - only images saved as images are the ones in the working batch (fetched new images)
+- separates different queries that make up the initialization steps of the database 
+    (located in initialization.sql) into different python functions so that adding another step just involves defining
+    a new function and adding it into the stack of calls in the __main__ function of
+    the file
+- dynamically determines the absolute path of the installation location of the root directory 
+    of the project so that absolute paths rather than relative ones can be used throughout the code
+    - ex: If Alice downloads the program in her machine at /Usr/Alice/Applications/, when __init__.py is called,
+        it sets the static variable PROJECT_ROOT_DIR of the Config class (defined in config.py) to 
+        /Usr/Alice/Applications/HandwritingDetector.
+    - stores this dynamically determined PROJECT_ROOT_DIR in a config file by storing it as a static (but mutable)
+        property of a class. Code anywhere in the project that needs to obtain a configuration thus only has to import
+        the class at a point in the runtime after __init__.py has mutated its fields to their proper values.
+        Ex: for fetch_new_images.py to obtain PROJECT_ROOT_DIR, it must import the Config class and access its static
+            PROJECT_ROOT_DIR attribute, which will contain it.
+    - FULL EXPLANATION: 
+        - The Config class in config.py starts with all its fields initialized to None
+        - When HandwritingDetector/__init__.py is called:
+            - It mutates the static field PROJECT_ROOT_DIR of the Config
+              class (not instance) to be the directory in which the file being called (HandwritingDetector/__init__.py)
+              resides. This will thus be the directory HandwritingDetector/
+            - It then mutates the static fields DB_PATH, NEW_IMAGES_CACHE_DIR, MODEL_SAVE_PATH, etc which all store
+              directory paths to stem from PROJECT_ROOT_DIR (which has now been correctly set) so that they are now 
+              the correct, absolute paths
+            - Important Note: Thus, for this program to work, HandwritingDetector/__init__.py must be called before 
+              anything else really
