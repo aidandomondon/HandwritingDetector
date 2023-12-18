@@ -17,8 +17,8 @@ def _last_update():
                 SELECT timeFetched FROM FetchNewTrainingImagesInstance
                     ORDER BY timeFetched DESC
             '''
-        ).fetchone()[0]
-    return result
+        ).fetchall()
+    return 0 if result == [] else result[0]
 
 
 # queries the database for all training images added after the specified time
@@ -28,7 +28,9 @@ def _query(since):
         cursor = connection.cursor()
         result = cursor.execute(
             f'''
-                SELECT * FROM TrainingImage
+                SELECT TrainingImage.imageData, Label.label 
+                    FROM TrainingImage INNER JOIN Label
+                        ON TrainingImage.labelID = Label.labelID
                     WHERE timeAdded > ?;
             ''',
             (since,)
@@ -50,6 +52,9 @@ class TrainingImageDataset(Dataset):
 
 
 # Loads query result of images into a PyTorch dataset, dataloader
+# Mandates a batch size of 1. 
+# *** may be possible to change to have a dynamic batch size equal 
+# to however many new images were fetched each time. Future implementation?
 def _to_dataloader(query_result):
     return DataLoader(TrainingImageDataset(query_result), 1)
 
@@ -61,11 +66,13 @@ def _mark_as_fetched():
         cursor.execute(
             f'''
                 INSERT INTO FetchNewTrainingImagesInstance (timeFetched) 
-                    VALUES (Date('now'));
+                    VALUES (DATETIME('now'));
             '''
         )
 
 
 def __main__():
-    _to_dataloader(_query(since=_last_update()))
+    new_images = _query(since=_last_update())
+    res = _to_dataloader(new_images)
     _mark_as_fetched()
+    return res
