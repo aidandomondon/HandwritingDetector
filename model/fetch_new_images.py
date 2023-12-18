@@ -7,6 +7,20 @@ from torch.utils.data import DataLoader
 from config import Config
 
 
+# queries the database for the last time images were fetched
+def _last_update():
+    result = None
+    with sql.connect(Config.DB_PATH) as connection:
+        cursor = connection.cursor()
+        result = cursor.execute(
+            f'''
+                SELECT timeFetched FROM FetchNewTrainingImagesInstance
+                    ORDER BY timeFetched DESC
+            '''
+        ).fetchone()[0]
+    return result
+
+
 # queries the database for all training images added after the specified time
 def _query(since):
     result = None
@@ -55,5 +69,3 @@ def _mark_as_fetched():
 def __main__(since):
     _to_dataloader(_query(since))
     _mark_as_fetched()
-
-
