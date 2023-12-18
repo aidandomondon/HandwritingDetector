@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 from config import Config
 import ast
+from torch import Tensor
 
 
 # queries the database for the last time images were fetched
@@ -19,7 +20,7 @@ def _last_update():
                     ORDER BY timeFetched DESC
             '''
         ).fetchall()
-    return 0 if result == [] else result[0]
+    return 0 if result == [] else result[0][0]
 
 
 # queries the database for all training images added after the specified time
@@ -48,8 +49,9 @@ class _TrainingImageDataset(Dataset):
     def decode_BLOB(query_results):
         decoded_results = []
         for result in query_results:
-            decoded_image = ast.literal_eval(
-                bytes.decode(result[0], Config.IMAGE_ENCODING_METHOD))
+            decoded_image = bytes.decode(result[0], Config.IMAGE_ENCODING_METHOD)
+            decoded_image = ast.literal_eval(decoded_image)
+            decoded_image = Tensor(decoded_image)
             decoded_results.append((decoded_image, result[1]))
         return decoded_results
 
