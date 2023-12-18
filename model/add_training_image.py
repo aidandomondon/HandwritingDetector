@@ -29,9 +29,9 @@ def _send_to_db(image_as_BLOB, label):
 
 
 # Converts the given image to a SQLite BLOB by making a string of
-# the represntation of the image as a 2D array and encoding it with UTF-8
+# the represntation of the image as a 2D array and encoding it
 def _image_to_BLOB(image :[[int]]):
-    return sql.Binary(bytes(str(image), 'utf8'))
+    return sql.Binary(bytes(str(image), Config.IMAGE_ENCODING_METHOD))
 
 
 def __main__(image :[[int]], label):
