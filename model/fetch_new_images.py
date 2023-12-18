@@ -1,5 +1,6 @@
 ###############################################################################
-# Retrieves images added since the given time and packages in a PyTorch Dataloader
+# Retrieves images added since the given time and packages in a PyTorch 
+# Dataloader
 ###############################################################################
 import sqlite3 as sql
 from torch.utils.data import Dataset
@@ -49,7 +50,8 @@ class _TrainingImageDataset(Dataset):
     def decode_BLOB(query_results):
         decoded_results = []
         for result in query_results:
-            decoded_image = bytes.decode(result[0], Config.IMAGE_ENCODING_METHOD)
+            decoded_image = bytes.decode(result[0], 
+                                         Config.IMAGE_ENCODING_METHOD)
             decoded_image = ast.literal_eval(decoded_image)
             decoded_image = Tensor(decoded_image)
             decoded_results.append((decoded_image, result[1]))
