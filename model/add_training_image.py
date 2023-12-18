@@ -12,13 +12,15 @@ def _send_to_db(image_as_BLOB, label):
         # possible inefficiency here. since we have to query the db for the labelID
         # that corresponds to our label everytime we upload an image to it,
         # we're adding an extra query for each image upload.
-        label_id = cursor.execute(f'''
+        label_id = cursor.execute(
+            f'''
                 SELECT labelID FROM Label 
                     WHERE label = :label;
             ''',
             {"label": label}
         ).fetchone()[0]
-        cursor.execute(f'''
+        cursor.execute(
+            f'''
                 INSERT INTO TrainingImage (imageData, labelID, timeAdded)
                     VALUES (:imageData, :labelID, DATE('now'));
             ''',
