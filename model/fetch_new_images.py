@@ -66,6 +66,6 @@ def _mark_as_fetched():
         )
 
 
-def __main__(since):
-    _to_dataloader(_query(since))
+def __main__():
+    _to_dataloader(_query(since=_last_update()))
     _mark_as_fetched()
