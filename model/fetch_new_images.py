@@ -12,10 +12,13 @@ def _query(since):
     result = None
     with sql.connect(Config.DB_PATH) as connection:
         cursor = connection.cursor()
-        result = cursor.execute(f'''
-            SELECT * FROM TrainingImage
-                WHERE timeAdded > {since};
-        ''')
+        result = cursor.execute(
+            f'''
+                SELECT * FROM TrainingImage
+                    WHERE timeAdded > ?;
+            ''',
+            (since,)
+        ).fetchall()
     return result
 
 
@@ -37,5 +40,20 @@ def _to_dataloader(query_result):
     return DataLoader(TrainingImageDataset(query_result), 1)
 
 
+# Creates a new FetchNewTrainingImagesInstance entry
+def _mark_as_fetched():
+    with sql.connect(Config.DB_PATH) as connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            f'''
+                INSERT INTO FetchNewTrainingImagesInstance (timeFetched) 
+                    VALUES (Date('now'));
+            '''
+        )
+
+
 def __main__(since):
-    return _to_dataloader(_query(since))
+    _to_dataloader(_query(since))
+    _mark_as_fetched()
+
+
