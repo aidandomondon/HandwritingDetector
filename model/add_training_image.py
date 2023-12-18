@@ -35,4 +35,8 @@ def _image_to_BLOB(image :[[int]]):
 
 
 def __main__(image :[[int]], label):
+    '''
+    Adds the given 2D array of integers (representing an image) to the
+    database as a row in `TrainingImage`.
+    '''
     _send_to_db(_image_to_BLOB(image), label)

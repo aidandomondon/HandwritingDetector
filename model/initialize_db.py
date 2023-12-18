@@ -80,6 +80,9 @@ def _add_FetchNewTrainingImagesInstance_table():
 
 
 def __main__():
+    '''
+    Initializes the SQLite database.
+    '''
     _create_database()
     _add_TrainingImage_table()
     _add_AdversarialImage_table()

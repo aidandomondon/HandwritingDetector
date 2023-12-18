@@ -86,6 +86,10 @@ def _mark_as_fetched():
 
 
 def __main__():
+    '''
+    Fetches new images added to the database since the last query.
+    Packages them in a `torch.utils.data.DataLoader`
+    '''
     new_images = _query(since=_last_update())
     dataloader = _to_dataloader(new_images)
     _mark_as_fetched()
