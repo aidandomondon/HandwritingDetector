@@ -5,6 +5,7 @@ import sqlite3 as sql
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 from config import Config
+import ast
 
 
 # queries the database for the last time images were fetched
@@ -23,10 +24,10 @@ def _last_update():
 
 # queries the database for all training images added after the specified time
 def _query(since):
-    result = None
+    results = None
     with sql.connect(Config.DB_PATH) as connection:
         cursor = connection.cursor()
-        result = cursor.execute(
+        results = cursor.execute(
             f'''
                 SELECT TrainingImage.imageData, Label.label 
                     FROM TrainingImage INNER JOIN Label
@@ -35,28 +36,39 @@ def _query(since):
             ''',
             (since,)
         ).fetchall()
-    return result
+    return results
 
 
 # torch.utils.data.Dataset implementation to store user images
-class TrainingImageDataset(Dataset):
+class _TrainingImageDataset(Dataset):
 
-    def __init__(self, result):
-        self.result = result
+    # Decodes the BLOB containing the image data for each result in the given 
+    # array of query results
+    @staticmethod
+    def decode_BLOB(query_results):
+        decoded_results = []
+        for result in query_results:
+            decoded_image = ast.literal_eval(
+                bytes.decode(result[0], Config.IMAGE_ENCODING_METHOD))
+            decoded_results.append((decoded_image, result[1]))
+        return decoded_results
 
+    def __init__(self, query_results):
+        self.samples = _TrainingImageDataset.decode_BLOB(query_results)
+        
     def __len__(self):
-        return len(self.result)
+        return len(self.samples)
 
     def __getitem__(self, idx):
-        return self.result[idx]
+        return self.samples[idx]
 
 
 # Loads query result of images into a PyTorch dataset, dataloader
 # Mandates a batch size of 1. 
 # *** may be possible to change to have a dynamic batch size equal 
 # to however many new images were fetched each time. Future implementation?
-def _to_dataloader(query_result):
-    return DataLoader(TrainingImageDataset(query_result), 1)
+def _to_dataloader(query_results):
+    return DataLoader(_TrainingImageDataset(query_results), 1)
 
 
 # Creates a new FetchNewTrainingImagesInstance entry
@@ -73,6 +85,6 @@ def _mark_as_fetched():
 
 def __main__():
     new_images = _query(since=_last_update())
-    res = _to_dataloader(new_images)
+    dataloader = _to_dataloader(new_images)
     _mark_as_fetched()
-    return res
+    return dataloader
