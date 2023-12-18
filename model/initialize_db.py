@@ -64,15 +64,15 @@ def _add_Label_table():
         cursor.execute('INSERT INTO Label (labelID, label) VALUES (9, 9);')
 
 
-# The purpose of the TrainingInstance table is to keep track of the last time new images
-# were pulled and the model was trained. If we can retrieve this at any time, we can know
-# the cutoff that separates new images from already-considered ones when fetching new images
-def _add_TrainingInstance_table():
+# The purpose of this table is to keep track of the last time new images were 
+# pulled. If we can retrieve this at any time, we can know the cutoff that 
+# separates new images from already-considered ones when fetching new images.
+def _add_FetchNewTrainingImagesInstance_table():
     with sql.connect(Config.DB_PATH) as connection:
         cursor = connection.cursor()
         cursor.execute(
             f'''
-                CREATE TABLE TrainingInstance (
+                CREATE TABLE FetchNewTrainingImagesInstance (
                     timeStarted DATE NOT NULL
                 );
             '''
@@ -84,4 +84,4 @@ def __main__():
     _add_TrainingImage_table()
     _add_AdversarialImage_table()
     _add_Label_table()
-    _add_TrainingInstance_table()
+    _add_FetchNewTrainingImagesInstance_table()
