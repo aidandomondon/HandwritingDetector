@@ -1,6 +1,8 @@
 - settings page
     - change number of epochs
     - change model architecture
+- make dataloader and network architecture support a dynamic batch size (equal to the number
+  of new images in a given fetch)
 
 Accomplishments / features:
 - integrates with an SQLite database
