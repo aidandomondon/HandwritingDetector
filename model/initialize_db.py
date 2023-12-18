@@ -73,7 +73,7 @@ def _add_FetchNewTrainingImagesInstance_table():
         cursor.execute(
             f'''
                 CREATE TABLE FetchNewTrainingImagesInstance (
-                    timeFetched DATE NOT NULL
+                    timeFetched DATETIME NOT NULL
                 );
             '''
         )

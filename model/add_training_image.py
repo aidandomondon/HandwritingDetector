@@ -22,7 +22,7 @@ def _send_to_db(image_as_BLOB, label):
         cursor.execute(
             f'''
                 INSERT INTO TrainingImage (imageData, labelID, timeAdded)
-                    VALUES (:imageData, :labelID, DATE('now'));
+                    VALUES (:imageData, :labelID, DATETIME('now'));
             ''',
             {"imageData": image_as_BLOB, "labelID": label_id}
         )
