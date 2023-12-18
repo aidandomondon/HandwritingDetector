@@ -3,10 +3,9 @@
 ###############################################################################
 import sqlite3 as sql
 from config import Config
-import numpy as np
 
 # Inserts the training image into the TrainingImage table
-def _send_to_db(image, label):
+def _send_to_db(image_as_BLOB, label):
     with sql.connect(Config.DB_PATH) as connection:
         cursor = connection.cursor()
         # Find labelID for our label.
@@ -23,14 +22,15 @@ def _send_to_db(image, label):
                 INSERT INTO TrainingImage (imageData, labelID, timeAdded)
                     VALUES (:imageData, :labelID, DATE('now'));
             ''',
-            {"imageData": sql.Binary(image.tobytes()), "labelID": label_id}
+            {"imageData": image_as_BLOB, "labelID": label_id}
         )
 
 
-# Converts the given image to a SQLite BLOB
-def _image_to_blob(image :np.ndarray):
-    image.tobytes()
+# Converts the given image to a SQLite BLOB by making a string of
+# the represntation of the image as a 2D array and encoding it with UTF-8
+def _image_to_BLOB(image :[[int]]):
+    return sql.Binary(bytes(str(image), 'utf8'))
 
 
-def __main__(image :np.ndarray, label):
-    _send_to_db(image, label)
+def __main__(image :[[int]], label):
+    _send_to_db(_image_to_BLOB(image), label)
