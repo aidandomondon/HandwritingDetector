@@ -57,13 +57,26 @@ def training_tab(tab_view :ttk.Notebook):
     training_tab.pack(expand=True, fill='both')
     tab_view.add(training_tab, text='Train')
 
+    ###############
+    # Text (Prompt)
+    ###############
+
     # prompt users on what number to draw
     training_tab_prompt = ttk.Label(training_tab, text=f"Draw a {7}.")
     training_tab_prompt.pack(expand=True, fill='both')
 
-    # drawing pad
-    # initialize 2d array as internal representation of the canvas state
+    #############
+    # Drawing Pad
+    #############
+
+    # Initialize 2d array as internal representation of the canvas state.
+    # **    This array is not managed in the model part of the program because 
+    #       this is specific to this implementation of the view / interface 
+    #       (that is, a GUI where users can draw, as opposed to, for example, 
+    #       one where users can directly upload files of arrays)
     model = [[0 for j in range(FIXED_SIZE)] for i in range(FIXED_SIZE)]
+
+    # Initialize actual canvas that users can draw on
     drawing_pad = tk.Canvas(training_tab, width=FIXED_SIZE, height=FIXED_SIZE)
     drawing_pad.pack(expand=True)
     # function left unnamed to convey that it is simply a wrapper 
@@ -71,6 +84,5 @@ def training_tab(tab_view :ttk.Notebook):
         _stroke(drawing_pad, model, event.x, event.y)
     drawing_pad.bind("<B1-Motion>", _f)
     drawing_pad.bind("<Button-1>", _f)
-
     # drawing_pad.bind("<ButtonRelease-1>", add_training_image.__main__())
     return training_tab
