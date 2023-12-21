@@ -28,5 +28,9 @@ class TkView():
 
       self.testing_tab = testing_tab.testing_tab(self.tab_view)
 
+
    def run(self):
+      '''
+      To start the Tk interface.
+      '''
       self.main_window.mainloop()

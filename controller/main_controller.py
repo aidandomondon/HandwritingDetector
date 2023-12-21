@@ -28,6 +28,9 @@ class Controller():
 
     
     def clear_grid(self):
+        '''
+        Clears the model's internal representation of the user's input.
+        '''
         self.grid.clear()
 
 
