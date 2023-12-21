@@ -56,8 +56,6 @@ class TrainingTab():
         self.canvas.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
 
 
-    
-
     # To keep track of / store the prompt displayed to users.
     # And to retrieve it.
     @staticmethod
