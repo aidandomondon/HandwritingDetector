@@ -8,6 +8,7 @@ class Controller():
     Instantiates the model and view and handles interactions between them.
     '''
     
+    
     def __init__(self):
         self.grid = drawing_grid_model.DrawingGridModel(
             Config.IMAGE_SIDE_LENGTH)
@@ -45,4 +46,8 @@ class Controller():
 
     
     def add_training_image(self):
+        '''
+        Adds the current grid contents / internal representation of the user's
+        inputted image to the database.
+        '''
         add_training_image.__main__(self.grid.arr, self.current_prompt)
