@@ -30,11 +30,11 @@ def _send_to_db(image_as_BLOB, label):
 
 # Converts the given image to a SQLite BLOB by making a string of
 # the represntation of the image as a 2D array and encoding it
-def _image_to_BLOB(image :[[int]]):
+def _image_to_BLOB(image :list[list[int]]):
     return sql.Binary(bytes(str(image), Config.IMAGE_ENCODING_METHOD))
 
 
-def __main__(image :[[int]], label):
+def __main__(image :list[list[int]], label):
     '''
     Adds the given 2D array of integers (representing an image) to the
     database as a row in `TrainingImage`.

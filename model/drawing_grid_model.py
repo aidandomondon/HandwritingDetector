@@ -1,13 +1,8 @@
 class DrawingGridModel():
     '''
     Two-dimensional array to internally represent the canvas state.
-
-    *This array is not managed in the model part of the program because
-    this is specific to this implementation of the view / interface 
-    (that is, a GUI where users can draw, as opposed to, for example, 
-    one where users can directly upload files of arrays).
     '''
-        
+
 
     def __init__(self, size):
         '''

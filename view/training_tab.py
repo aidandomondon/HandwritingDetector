@@ -1,81 +1,76 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from controller import add_training_image
-from view import drawing_grid_model
+from config import Config
+from controller import main_controller
 
-FIXED_SIZE = 28
-
-# Fills the 4-neighborhood of the given point on the given canvas.
-# Fills the point's neighbors with a lighter color than used for point.
-# Updates the internal representation of the grid to reflect the added stroke.
-def _stroke(canvas, internal_model :drawing_grid_model.DrawingGridModel, x, y):
-    full_color = "#000000"
-    light_color = "#808080"
-    full_color_internal = 255   # pixel intensity to be given to the center
-    light_color_internal = 128  # pixel intensity to be given to the neighbors
-    r = 1
-
-    # Center
-    canvas.create_rectangle(x, y, x, y, fill=full_color)
-    internal_model.write(y, x, full_color_internal)
-
-    # Left neighbor
-    canvas.create_rectangle(x - r, y, x - r, y, fill=light_color)
-    internal_model.write(y, x - r, light_color_internal)
-
-    # Right neighbor
-    canvas.create_rectangle(x + r, y, x + r, y, fill=light_color)
-    internal_model.write(y, x + r, light_color_internal)
-
-    # Bottom neighbor
-    canvas.create_rectangle(x, y - r, x, y - r, fill=light_color)
-    internal_model.write(y - r, x, light_color_internal)
-
-    # Top neighbor
-    canvas.create_rectangle(x, y + r, x, y + r, fill=light_color)
-    internal_model.write(y + r, x, light_color_internal)
-
-
-def training_tab(tab_view :ttk.Notebook):
+class TrainingTab():
     '''
-    Returns a `tkinter.Frame` containing the contents of the training tab.
     Includes the grid to draw the next training image, and the prompt for
     which digit the user should draw.
-
-    @tab_view: The `ttk.Notebook` tab view to which this tab will be added.
     '''
 
-    # root frame
-    training_tab = ttk.Frame(tab_view)
-    training_tab.pack(expand=True, fill='both')
-    tab_view.add(training_tab, text='Train')
+    def stroke(self, x, y):
+        '''
+        Fills the 4-neighborhood of the given point on the given canvas.
+        Fills the point's neighbors with a lighter color than used for point.
+        '''
+        
+        full_color = "#000000"
+        light_color = "#808080"
+        r = 1
+        self.drawing_pad.create_rectangle(x, y, x, y, fill=full_color) # Center
+        self.drawing_pad.create_rectangle(x - r, y, x - r, y, fill=light_color) # Left
+        self.drawing_pad.create_rectangle(x + r, y, x + r, y, fill=light_color) # Right
+        self.drawing_pad.create_rectangle(x, y - r, x, y - r, fill=light_color) # Bottom
+        self.drawing_pad.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
 
-    target = 7
 
-    ###############
-    # Text (Prompt)
-    ###############
+class TrainingTabBuilder():
+    '''
+    Breaks construction of `TrainingTab` into smaller logical units.
+    '''
 
-    # prompt users on what number to draw
-    training_tab_prompt = ttk.Label(training_tab, text=f"Draw a {target}.")
-    training_tab_prompt.pack(expand=True, fill='both')
+    def tabUnder(self, master_tab_view :ttk.Notebook):
+        self.master = master_tab_view
+        return self
 
-    #############
-    # Drawing Pad
-    #############
+    def bind_to_controller(self, controller :main_controller.Controller):
+        self.controller = controller
+        return self
+    
+    def add_main_frame(self):
+        self.frame = ttk.Frame(self.master)
+        self.frame.pack(expand=True, fill='both')
+        self.master.add(self.frame, text='Train')
+        return self
+    
+    def add_prompt(self):
+        self.prompt = ttk.Label(self.frame, text=f"Draw a {7}.")
+        self.prompt.pack(expand=True, fill='both')
+        return self
 
-    # Initialize 2d array as internal representation of the canvas state.
-    model = drawing_grid_model.DrawingGridModel(FIXED_SIZE)
-
-    # Initialize actual canvas that users can draw on
-    drawing_pad = tk.Canvas(training_tab, width=FIXED_SIZE, height=FIXED_SIZE)
-    drawing_pad.pack(expand=True)
-    # function left unnamed to convey that it is simply a wrapper 
-    def _f(event): 
-        _stroke(drawing_pad, model, event.x, event.y)
-    drawing_pad.bind("<B1-Motion>", _f)
-    drawing_pad.bind("<Button-1>", _f)
-    drawing_pad.bind("<ButtonRelease-1>", 
-                     lambda x: add_training_image.__main__(model.arr, target))
-
-    return training_tab
+    def add_drawing_pad(self):
+        self.drawing_pad = tk.Canvas(self.frame, 
+                                width=Config.IMAGE_SIDE_LENGTH, 
+                                height=Config.IMAGE_SIDE_LENGTH)
+        self.drawing_pad.pack(expand=True)
+        return self
+        
+    @staticmethod
+    def bind_drawing_pad(controller, training_tab):
+        def _f(event): # function left unnamed to convey its simply a wrapper
+            training_tab.stroke(event.x, event.y)
+            controller.stroke(event.x, event.y)
+        training_tab.drawing_pad.bind("<B1-Motion>", _f)
+        training_tab.drawing_pad.bind("<Button-1>", _f)
+        training_tab.drawing_pad.bind("<ButtonRelease-1>",
+                                      lambda e: controller.add_training_image())
+        
+    def build(self):
+        tt = TrainingTab()
+        tt.controller = self.controller
+        tt.main_frame = self.frame
+        tt.prompt = self.prompt
+        tt.drawing_pad = self.drawing_pad
+        TrainingTabBuilder.bind_drawing_pad(tt.controller, tt)
+        return tt
