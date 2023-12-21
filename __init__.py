@@ -34,8 +34,8 @@ from controller import main_controller
 from view import tk_view
 
 ctrlr = main_controller.Controller()
-b = tk_view.TkViewBuilder()
-b.bind_to_controller(ctrlr).add_main_window().add_main_frame().add_tab_view().add_training_tab().add_testing_tab()
-tkv = b.build()
-
+# b = tk_view.TkViewBuilder()
+# b.bind_to_controller(ctrlr).add_main_window().add_main_frame().add_tab_view().add_training_tab().add_testing_tab()
+# tkv = b.build()
+tkv = tk_view.TkView(ctrlr)
 tkv.run()
