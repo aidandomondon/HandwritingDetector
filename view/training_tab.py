@@ -35,17 +35,11 @@ class TrainingTab():
         self.canvas.bind("<Button-1>", on_mousedown)
 
         def on_mouseup(event):
-            self.controller.accept_drawing()
-            self.prompt.config(text=self._prompt(self.controller.current_prompt))
-            self.canvas.delete('all')
+            self.controller.accept_drawing() # submit current grid to db and clear grid for new storage
+            self.canvas.delete('all')        # wipe visual representation of grid (drawing pad)
+            self.prompt.config(              # get next label user is prompted to draw
+                text=self._prompt(self.controller.current_prompt))
         self.canvas.bind("<ButtonRelease-1>", on_mouseup)
-
-
-    # To keep track of / store the prompt displayed to users.
-    # And to retrieve it.
-    @staticmethod
-    def _prompt(label :str) -> str:
-        return f"Draw a {label}."
     
 
     # Fills the 4-neighborhood of the given point on the given canvas.
@@ -60,3 +54,12 @@ class TrainingTab():
         self.canvas.create_rectangle(x + r, y, x + r, y, fill=light_color) # Right
         self.canvas.create_rectangle(x, y - r, x, y - r, fill=light_color) # Bottom
         self.canvas.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
+
+
+    
+
+    # To keep track of / store the prompt displayed to users.
+    # And to retrieve it.
+    @staticmethod
+    def _prompt(label :str) -> str:
+        return f"Draw a {label}."
