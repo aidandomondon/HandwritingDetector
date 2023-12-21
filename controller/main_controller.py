@@ -27,5 +27,19 @@ class Controller():
         self.grid.write(y + r, x, Config.GRID_STROKE_SEMI_COLOR) # Top
 
     
+    def clear_grid(self):
+        self.grid.clear()
+
+
+    def accept_drawing(self):
+        '''
+        Adds the current grid contents to the database as a training image,
+        clears the grid, and advances to the next prompt.
+        '''
+        self.add_training_image()
+        self.clear_grid()
+        self.current_prompt = self.prompter.next()
+
+    
     def add_training_image(self):
         add_training_image.__main__(self.grid.arr, self.current_prompt)

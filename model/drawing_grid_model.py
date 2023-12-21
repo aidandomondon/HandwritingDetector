@@ -25,3 +25,12 @@ class DrawingGridModel():
         '''
         if j >= 0 and j < self.size and i >= 0 and i < self.size:
             self.arr[i][j] = value
+
+    
+    def clear(self):
+        '''
+        Writes 0 to all entries in this model's grid.
+        '''
+        for i in range(self.size):
+            for j in range(self.size):
+                self.write(i, j, 0)

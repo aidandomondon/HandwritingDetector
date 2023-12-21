@@ -19,7 +19,8 @@ class TrainingTab():
         self.frame.pack(expand=True, fill='both')
         self.master.add(self.frame, text='Train')
 
-        self.prompt = ttk.Label(self.frame, text=f"Draw a {7}.")
+        self.prompt = ttk.Label(self.frame, 
+                                text=TrainingTab._prompt(self.controller.current_prompt))
         self.prompt.pack(expand=True, fill='both')
 
         self.canvas = tk.Canvas(self.frame, 
@@ -27,19 +28,29 @@ class TrainingTab():
                                 height=Config.IMAGE_SIDE_LENGTH)
         self.canvas.pack(expand=True)
 
-        def _f(event): # function left unnamed to convey its simply a wrapper
+        def on_mousedown(event):
             self._stroke(event.x, event.y)
             self.controller.stroke(event.x, event.y)
-        self.canvas.bind("<B1-Motion>", _f)
-        self.canvas.bind("<Button-1>", _f)
-        self.canvas.bind("<ButtonRelease-1>",
-                         lambda e: self.controller.add_training_image())
+        self.canvas.bind("<B1-Motion>", on_mousedown)
+        self.canvas.bind("<Button-1>", on_mousedown)
 
+        def on_mouseup(event):
+            self.controller.accept_drawing()
+            self.prompt.config(text=self._prompt(self.controller.current_prompt))
+            self.canvas.delete('all')
+        self.canvas.bind("<ButtonRelease-1>", on_mouseup)
+
+
+    # To keep track of / store the prompt displayed to users.
+    # And to retrieve it.
+    @staticmethod
+    def _prompt(label :str) -> str:
+        return f"Draw a {label}."
+    
+
+    # Fills the 4-neighborhood of the given point on the given canvas.
+    # Fills the point's neighbors with a lighter color than used for point.
     def _stroke(self, x, y):
-        '''
-        Fills the 4-neighborhood of the given point on the given canvas.
-        Fills the point's neighbors with a lighter color than used for point.
-        '''
         
         full_color = "#000000"
         light_color = "#808080"
