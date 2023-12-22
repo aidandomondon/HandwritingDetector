@@ -1,6 +1,6 @@
 import tkinter as tk 
 from tkinter import ttk
-from controller import main_controller
+from controller import master_controller
 from view.training_tab import TrainingTab
 from view import testing_tab
 
@@ -10,7 +10,7 @@ class TkView():
    A Tk user interface for the app using `tkinter`.
    '''
 
-   def __init__(self, controller :main_controller.Controller):
+   def __init__(self, controller :master_controller.MasterController):
 
       self.controller = controller
 

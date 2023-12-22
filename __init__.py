@@ -30,9 +30,10 @@ sys.path.append(Config.PROJECT_ROOT_DIR)
 # from model import fetch_new_images
 # dl = fetch_new_images.__main__()
 
-from controller import main_controller
+from controller import master_controller
 from view import tk_view
 
-ctrlr = main_controller.Controller()
+labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+ctrlr = master_controller.MasterController(labels)
 tkv = tk_view.TkView(ctrlr)
 tkv.run()

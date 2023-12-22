@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from config import Config
-from controller import main_controller
+from controller import master_controller
 
 class TrainingTab():
     '''
@@ -9,7 +9,7 @@ class TrainingTab():
     which digit the user should draw.
     '''
 
-    def __init__(self, master_tab_view :ttk.Notebook, controller :main_controller.Controller):
+    def __init__(self, master_tab_view :ttk.Notebook, controller :master_controller.MasterController):
 
         self.controller = controller
 
@@ -20,7 +20,7 @@ class TrainingTab():
         self.master.add(self.frame, text='Train')
 
         self.prompt = ttk.Label(self.frame, 
-                                text=TrainingTab._prompt(self.controller.current_prompt))
+                                text=TrainingTab._prompt(self.controller.get_current_prompt()))
         self.prompt.pack(expand=True, fill='both')
 
         self.canvas = tk.Canvas(self.frame, 
@@ -38,14 +38,13 @@ class TrainingTab():
             self.controller.accept_drawing() # submit current grid to db and clear grid for new storage
             self.canvas.delete('all')        # wipe visual representation of grid (drawing pad)
             self.prompt.config(              # get next label user is prompted to draw
-                text=self._prompt(self.controller.current_prompt))
+                text=self._prompt(self.controller.get_current_prompt()))
         self.canvas.bind("<ButtonRelease-1>", on_mouseup)
     
 
     # Fills the 4-neighborhood of the given point on the given canvas.
     # Fills the point's neighbors with a lighter color than used for point.
     def _stroke(self, x, y):
-        
         full_color = "#000000"
         light_color = "#808080"
         r = 1
