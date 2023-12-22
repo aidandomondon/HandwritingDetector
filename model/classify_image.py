@@ -2,7 +2,6 @@
 # Classifies the given image
 ###############################################################################
 from config import Config
-from os import path
 import torch.optim.adam
 import torch.utils.data.dataloader as dl
 import torch.nn as nn
