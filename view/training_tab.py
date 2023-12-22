@@ -11,35 +11,33 @@ class TrainingTab():
 
     def __init__(self, master_tab_view :ttk.Notebook, controller :master_controller.MasterController):
 
-        self.controller = controller
+        self._controller = controller
 
-        self.master = master_tab_view
+        self._frame = ttk.Frame(master_tab_view)
+        self._frame.pack(expand=True, fill='both')
+        master_tab_view.add(self._frame, text='Train')
 
-        self.frame = ttk.Frame(self.master)
-        self.frame.pack(expand=True, fill='both')
-        self.master.add(self.frame, text='Train')
-
-        self.prompt = ttk.Label(self.frame, 
+        self._prompt_label = ttk.Label(self._frame, 
                                 text=TrainingTab._prompt(self.controller.get_current_prompt()))
-        self.prompt.pack(expand=True, fill='both')
+        self._prompt_label.pack(expand=True, fill='both')
 
-        self.canvas = tk.Canvas(self.frame, 
+        self._canvas = tk.Canvas(self._frame, 
                                 width=Config.IMAGE_SIDE_LENGTH, 
                                 height=Config.IMAGE_SIDE_LENGTH)
-        self.canvas.pack(expand=True)
+        self._canvas.pack(expand=True)
 
         def on_mousedown(event):
             self._stroke(event.x, event.y)
             self.controller.stroke(event.x, event.y)
-        self.canvas.bind("<B1-Motion>", on_mousedown)
-        self.canvas.bind("<Button-1>", on_mousedown)
+        self._canvas.bind("<B1-Motion>", on_mousedown)
+        self._canvas.bind("<Button-1>", on_mousedown)
 
         def on_mouseup(event):
-            self.controller.accept_drawing() # submit current grid to db and clear grid for new storage
-            self.canvas.delete('all')        # wipe visual representation of grid (drawing pad)
-            self.prompt.config(              # get next label user is prompted to draw
+            self._controller.accept_drawing() # submit current grid to db and clear grid for new storage
+            self._canvas.delete('all')        # wipe visual representation of grid (drawing pad)
+            self._prompt_label.config(              # get next label user is prompted to draw
                 text=self._prompt(self.controller.get_current_prompt()))
-        self.canvas.bind("<ButtonRelease-1>", on_mouseup)
+        self._canvas.bind("<ButtonRelease-1>", on_mouseup)
     
 
     # Fills the 4-neighborhood of the given point on the given canvas.
@@ -48,11 +46,11 @@ class TrainingTab():
         full_color = "#000000"
         light_color = "#808080"
         r = 1
-        self.canvas.create_rectangle(x, y, x, y, fill=full_color) # Center
-        self.canvas.create_rectangle(x - r, y, x - r, y, fill=light_color) # Left
-        self.canvas.create_rectangle(x + r, y, x + r, y, fill=light_color) # Right
-        self.canvas.create_rectangle(x, y - r, x, y - r, fill=light_color) # Bottom
-        self.canvas.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
+        self._canvas.create_rectangle(x, y, x, y, fill=full_color) # Center
+        self._canvas.create_rectangle(x - r, y, x - r, y, fill=light_color) # Left
+        self._canvas.create_rectangle(x + r, y, x + r, y, fill=light_color) # Right
+        self._canvas.create_rectangle(x, y - r, x, y - r, fill=light_color) # Bottom
+        self._canvas.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
 
 
     # To keep track of / store the prompt displayed to users.
