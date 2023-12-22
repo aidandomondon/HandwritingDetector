@@ -19,13 +19,24 @@ class MasterController():
         return self._model.current_prompt
     
 
-    def stroke(self, x, y):
+    def stroke_train(self, x, y):
         '''
-        Adds a stroke to the model's internal array representing the user input space.
+        Adds a stroke to the model's internal array representing the 
+        input space for the user's training images.
         
         Defers to the model's `stroke` method
         '''
-        self._model.stroke(x, y)
+        self._model.stroke_train(x, y)
+
+
+    def stroke_test(self, x, y):
+        '''
+        Adds a stroke to the model's internal array representing the 
+        input space for the user's test images.
+        
+        Defers to the model's `stroke_test` method
+        '''
+        self._model.stroke_test(x, y)
 
 
     def accept_drawing(self):
@@ -34,5 +45,10 @@ class MasterController():
         clears the grid, and advances to the next prompt.
         '''
         self._model.make_training_image()
-        self._model.clear_grid()
+        self._model.clear_grid_train()
         self._model.next_prompt()
+
+
+    def classify_drawing(self):
+        self._model.classify_image()
+        self._model.clear_grid_test()

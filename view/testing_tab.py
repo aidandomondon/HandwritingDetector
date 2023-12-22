@@ -24,6 +24,17 @@ class TestingTab():
                                 height=Config.IMAGE_SIDE_LENGTH)
         self._canvas.pack(expand=True)
 
+        def on_mousedown(event):
+            self._stroke(event.x, event.y)
+            self._controller.stroke_test(event.x, event.y)
+        self._canvas.bind("<B1-Motion>", on_mousedown)
+        self._canvas.bind("<Button-1>", on_mousedown)
+
+        def on_mouseup(event):
+            self._controller.classify_drawing() # submit current grid to db and clear grid for new storage
+            self._canvas.delete('all')        # wipe visual representation of grid (drawing pad)
+        self._canvas.bind("<ButtonRelease-1>", on_mouseup)
+
 
     # ABSTRACT THIS OUT FROM TestingTab and TrainingTab
     # Fills the point's neighbors with a lighter color than used for point.
