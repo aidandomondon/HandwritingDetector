@@ -36,7 +36,7 @@ class TrainingTab():
             self._controller.accept_drawing() # submit current grid to db and clear grid for new storage
             self._canvas.delete('all')        # wipe visual representation of grid (drawing pad)
             self._prompt_label.config(              # get next label user is prompted to draw
-                text=self._prompt(self.controller.get_current_prompt()))
+                text=self._prompt(self._controller.get_current_prompt()))
         self._canvas.bind("<ButtonRelease-1>", on_mouseup)
     
 
