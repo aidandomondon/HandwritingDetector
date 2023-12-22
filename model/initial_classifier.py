@@ -30,7 +30,7 @@ class InitialClassifier(nn.Module):
         self.reLU9 = nn.ReLU()
         self.linear10 = nn.Linear(30, 10)
         self.reLU10 = nn.ReLU()
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=0)
     
     def forward(self, X):
         X = self.conv1(X)

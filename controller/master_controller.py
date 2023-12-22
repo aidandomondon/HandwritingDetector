@@ -1,4 +1,5 @@
 from model import master_model
+from model import train_on_new_images
 
 class MasterController():
     '''
@@ -42,9 +43,12 @@ class MasterController():
     def accept_drawing(self):
         '''
         Adds the current grid contents to the database as a training image,
-        clears the grid, and advances to the next prompt.
+        clears the grid, and advances to the next prompt. Starts training
+        of the neural net on this example and any others that might not have
+        been fetched.
         '''
         self._model.make_training_image()
+        train_on_new_images.__main__()
         self._model.clear_grid_train()
         self._model.next_prompt()
 

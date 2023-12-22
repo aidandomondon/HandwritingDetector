@@ -23,10 +23,12 @@ def _train(net :nn.Module, loss_fn, dataloader :dl.DataLoader):
     optimizer = torch.optim.Adam(net.parameters())
     for epoch in range(Config.EPOCHS):
         for _, data in enumerate(dataloader):
-            images, labels = data   # unzip
+            image, label = data   # unzip
+            label = label.long()
             optimizer.zero_grad()
-            logits = net.forward(images)
-            loss = loss_fn(logits, labels)
+            logit = net.forward(image)
+            logit = torch.unsqueeze(logit, 0)
+            loss = loss_fn(logit, label)
             loss.backward()
             optimizer.step()
 
