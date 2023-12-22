@@ -1,6 +1,6 @@
 ###############################################################################
-# Retrieves images added since the given time and packages in a PyTorch 
-# Dataloader
+# Retrieves images added since the last time images were retrieved from the
+# database and packages in a PyTorch Dataloader
 ###############################################################################
 import sqlite3 as sql
 from torch.utils.data import Dataset
