@@ -18,7 +18,7 @@ class TrainingTab():
         master_tab_view.add(self._frame, text='Train')
 
         self._prompt_label = ttk.Label(self._frame, 
-                                text=TrainingTab._prompt(self.controller.get_current_prompt()))
+                                text=TrainingTab._prompt(self._controller.get_current_prompt()))
         self._prompt_label.pack(expand=True, fill='both')
 
         self._canvas = tk.Canvas(self._frame, 
