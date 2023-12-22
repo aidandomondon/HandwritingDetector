@@ -38,7 +38,7 @@ def _saveModel(net):
     torch.save(net, Config.MODEL_SAVE_PATH)
 
 
-def __main___(dataloader :dl.DataLoader, default_arch :nn.Module, loss_fn):
+def __main__(dataloader :dl.DataLoader, default_arch :nn.Module, loss_fn):
     net = _loadModel(default_arch)
     _train(net, dataloader, loss_fn)
     _saveModel(net)
