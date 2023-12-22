@@ -5,6 +5,7 @@ class InitialClassifier(nn.Module):
     Initial implementation of a classifier for quick mocking.
     '''
     def __init__(self):
+        super().__init__()
         self.layers = nn.Sequential(
             nn.Conv2d(1, 32, (3, 3)),
             nn.Conv2d(32, 64, (3, 3)),
