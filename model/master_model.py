@@ -1,3 +1,4 @@
+from os import path
 from config import Config
 from model import initialize_db
 from model import drawing_grid_model
@@ -12,7 +13,8 @@ class MasterModel():
     def __init__(self, labels):
         self._prompter = prompter.Prompter(labels)
         self.current_prompt = self._prompter.next()
-        initialize_db.__main__()
+        if not path.isfile(Config.DB_PATH):
+            initialize_db.__main__()
         self._grid_model = drawing_grid_model.DrawingGridModel(Config.IMAGE_SIDE_LENGTH)
 
 
