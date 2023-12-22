@@ -6,19 +6,56 @@ class InitialClassifier(nn.Module):
     '''
     def __init__(self):
         super().__init__()
-        self.layers = nn.Sequential(
-            nn.Conv2d(1, 32, (3, 3)),
-            nn.Conv2d(32, 64, (3, 3)),
-            nn.Conv2d(64, 25, (3, 3)),
-            nn.Flatten(),
-            nn.Linear(128, 75),
-            nn.ReLU(),
-            nn.Linear(75, 25),
-            nn.ReLU(),
-            nn.Linear(25, 10),
-            nn.ReLU(),
-            nn.Softmax()
-        )
+        self.conv1 = nn.Conv2d(1, 32, (3, 3))
+        self.conv2 = nn.Conv2d(32, 64, (3, 3))
+        self.conv3 = nn.Conv2d(64, 25, (3, 3))
+        self.flatten = nn.Flatten(0)
+        self.linear1 = nn.Linear(12100, 10000)
+        self.reLU1 = nn.ReLU()
+        self.linear2 = nn.Linear(10000, 5000)
+        self.reLU2 = nn.ReLU()
+        self.linear3 = nn.Linear(5000, 2500)
+        self.reLU3 = nn.ReLU()
+        self.linear4 = nn.Linear(2500, 1250)
+        self.reLU4 = nn.ReLU()
+        self.linear5 = nn.Linear(1250, 500)
+        self.reLU5 = nn.ReLU()
+        self.linear6 = nn.Linear(500, 250)
+        self.reLU6 = nn.ReLU()
+        self.linear7 = nn.Linear(250, 125)
+        self.reLU7 = nn.ReLU()
+        self.linear8 = nn.Linear(125, 60)
+        self.reLU8 = nn.ReLU()
+        self.linear9 = nn.Linear(60, 30)
+        self.reLU9 = nn.ReLU()
+        self.linear10 = nn.Linear(30, 10)
+        self.reLU10 = nn.ReLU()
+        self.softmax = nn.Softmax()
     
     def forward(self, X):
-        return self.layers(X)
+        X = self.conv1(X)
+        X = self.conv2(X)
+        X = self.conv3(X)
+        X = self.flatten(X)
+        X = self.linear1(X)
+        X = self.reLU1(X)
+        X = self.linear2(X)
+        X = self.reLU2(X)
+        X = self.linear3(X)
+        X = self.reLU3(X)
+        X = self.linear4(X)
+        X = self.reLU4(X)
+        X = self.linear5(X)
+        X = self.reLU5(X)
+        X = self.linear6(X)
+        X = self.reLU6(X)
+        X = self.linear7(X)
+        X = self.reLU7(X)
+        X = self.linear8(X)
+        X = self.reLU8(X)
+        X = self.linear9(X)
+        X = self.reLU9(X)
+        X = self.linear10(X)
+        X = self.reLU10(X)
+        X = self.softmax(X)
+        return X
