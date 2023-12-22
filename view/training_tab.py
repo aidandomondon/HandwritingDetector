@@ -28,7 +28,7 @@ class TrainingTab():
 
         def on_mousedown(event):
             self._stroke(event.x, event.y)
-            self.controller.stroke(event.x, event.y)
+            self._controller.stroke(event.x, event.y)
         self._canvas.bind("<B1-Motion>", on_mousedown)
         self._canvas.bind("<Button-1>", on_mousedown)
 
