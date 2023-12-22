@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from controller import master_controller
 from view.training_tab import TrainingTab
-from view import testing_tab
+from view.testing_tab import TestingTab
 
 
 class TkView():
@@ -26,7 +26,7 @@ class TkView():
 
       self.training_tab = TrainingTab(self.tab_view, self.controller)
 
-      self.testing_tab = testing_tab.testing_tab(self.tab_view)
+      self.testing_tab = TestingTab(self.tab_view, self.controller)
 
 
    def run(self):

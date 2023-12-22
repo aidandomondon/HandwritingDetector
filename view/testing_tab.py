@@ -1,12 +1,38 @@
+from config import Config
 import tkinter as tk
 from tkinter import ttk as ttk
+from controller import master_controller
 
-def testing_tab(tab_view):
+class TestingTab():
     '''
-    Returns a `tkinter.Frame` containing the contents of the testing tab.
+    Containins the contents of the testing tab.
+    '''
 
-    @tab_view: The `ttk.Notebook` tab view to which this tab will be added.
-    '''
-    testing_tab = ttk.Frame(tab_view)
-    testing_tab.pack(expand=True, fill='both')
-    tab_view.add(testing_tab, text='Test')
+    def __init__(self, master_tab_view :ttk.Notebook, controller :master_controller.MasterController):
+        
+        self._controller = controller
+
+        self._frame = ttk.Frame(master_tab_view)
+        self._frame.pack(expand=True, fill='both')
+        master_tab_view.add(self._frame, text='Test')
+
+        self._prompt = ttk.Label(self._frame, text='That looks like a: ')
+        self._prompt.pack(expand=True, fill='both')
+
+        self._canvas = tk.Canvas(self._frame, 
+                                width=Config.IMAGE_SIDE_LENGTH, 
+                                height=Config.IMAGE_SIDE_LENGTH)
+        self._canvas.pack(expand=True)
+
+
+    # ABSTRACT THIS OUT FROM TestingTab and TrainingTab
+    # Fills the point's neighbors with a lighter color than used for point.
+    def _stroke(self, x, y):
+        full_color = "#000000"
+        light_color = "#808080"
+        r = 1
+        self._canvas.create_rectangle(x, y, x, y, fill=full_color) # Center
+        self._canvas.create_rectangle(x - r, y, x - r, y, fill=light_color) # Left
+        self._canvas.create_rectangle(x + r, y, x + r, y, fill=light_color) # Right
+        self._canvas.create_rectangle(x, y - r, x, y - r, fill=light_color) # Bottom
+        self._canvas.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
