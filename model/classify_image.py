@@ -19,4 +19,4 @@ def _classify(net :nn.Module, image :list[list[int]]):
 
 def __main__(image :list[list[int]]):
     net = _loadModel()
-    print(_classify(net, image))
+    return _classify(net, image)

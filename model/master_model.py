@@ -4,6 +4,7 @@ from model import initialize_db
 from model import drawing_grid_model
 from model import prompter
 from model import add_training_image
+from torch import Tensor
 from model import classify_image
 
 class MasterModel():
@@ -73,4 +74,4 @@ class MasterModel():
         '''
         Classifies the current testing grid contents.
         '''
-        return classify_image.__main__(self.training_grid.arr)
+        return classify_image.__main__(Tensor([self._training_grid.arr])).item()

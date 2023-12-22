@@ -41,14 +41,14 @@ sys.path.append(Config.PROJECT_ROOT_DIR)
 
 
 
-# # Testing MVC
-# from controller import master_controller
-# from view import tk_view
+# Testing MVC
+from controller import master_controller
+from view import tk_view
 
-# labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-# ctrlr = master_controller.MasterController(labels)
-# tkv = tk_view.TkView(ctrlr)
-# tkv.run()
+labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+ctrlr = master_controller.MasterController(labels)
+tkv = tk_view.TkView(ctrlr)
+tkv.run()
 
 
 
@@ -67,12 +67,12 @@ sys.path.append(Config.PROJECT_ROOT_DIR)
 
 
 
-# Testing classification
-from model import classify_image
-from random import randint
-from torch import Tensor
-test_image = [[randint(0, 255) for j in range(Config.IMAGE_SIDE_LENGTH)] for i in range(Config.IMAGE_SIDE_LENGTH)]
-test_image = [test_image]
-test_image = Tensor(test_image)
-print(test_image.shape)
-classify_image.__main__(test_image)
+# # Testing classification
+# from model import classify_image
+# from random import randint
+# from torch import Tensor
+# test_image = [[randint(0, 255) for j in range(Config.IMAGE_SIDE_LENGTH)] for i in range(Config.IMAGE_SIDE_LENGTH)]
+# test_image = [test_image]
+# test_image = Tensor(test_image)
+# print(test_image.shape)
+# classify_image.__main__(test_image)

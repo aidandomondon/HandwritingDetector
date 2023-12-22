@@ -16,8 +16,8 @@ class TestingTab():
         self._frame.pack(expand=True, fill='both')
         master_tab_view.add(self._frame, text='Test')
 
-        self._prompt = ttk.Label(self._frame, text='That looks like a: ')
-        self._prompt.pack(expand=True, fill='both')
+        self._prompt_label = ttk.Label(self._frame, text=TestingTab._prompt('..'))
+        self._prompt_label.pack(expand=True, fill='both')
 
         self._canvas = tk.Canvas(self._frame, 
                                 width=Config.IMAGE_SIDE_LENGTH, 
@@ -31,8 +31,9 @@ class TestingTab():
         self._canvas.bind("<Button-1>", on_mousedown)
 
         def on_mouseup(event):
-            self._controller.classify_drawing() # submit current grid to db and clear grid for new storage
             self._canvas.delete('all')        # wipe visual representation of grid (drawing pad)
+            self._prompt_label.config(              # update caption
+                text=TestingTab._prompt(self._controller.get_prediction()))
         self._canvas.bind("<ButtonRelease-1>", on_mouseup)
 
 
@@ -47,3 +48,10 @@ class TestingTab():
         self._canvas.create_rectangle(x + r, y, x + r, y, fill=light_color) # Right
         self._canvas.create_rectangle(x, y - r, x, y - r, fill=light_color) # Bottom
         self._canvas.create_rectangle(x, y + r, x, y + r, fill=light_color) # Top
+
+    
+    # To keep track of / store the caption displayed to users.
+    # And to retrieve it.
+    @staticmethod
+    def _prompt(prediction :str) -> str:
+        return f"That looks like a {prediction}."

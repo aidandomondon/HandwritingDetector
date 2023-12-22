@@ -49,6 +49,7 @@ class MasterController():
         self._model.next_prompt()
 
 
-    def classify_drawing(self):
-        self._model.classify_image()
+    def get_prediction(self):
+        result = self._model.classify_image()
         self._model.clear_grid_test()
+        return result
